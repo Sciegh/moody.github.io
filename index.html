@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moody — say how you feel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#FFF6EC; --bg2:#FFE7D3; --paper:#FFFFFF; --paper-soft:#FFF1E3;
+    --ink:#5B4033; --ink-dim:#9B7E6C; --ink-faint:#C9AF9C;
+    --line: rgba(91,64,51,0.10); --line-soft: rgba(91,64,51,0.06);
+    --coral:#FF6F91; --coral-dark:#E24E74;
+    --peach:#FFA65C; --peach-dark:#E8863C;
+    --sky:#4FB9E8; --sky-dark:#2E96C6;
+    --mint:#3FCE9A; --mint-dark:#26AD7C;
+    --lilac:#B084E0; --lilac-dark:#9364C2;
+    --marigold:#FFC24B;
+    --r-xl:36px; --r-lg:26px; --r-md:20px; --r-sm:14px;
+    --accent: var(--coral);
+    --accent-dark: var(--coral-dark);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; color:var(--ink);
+    font-family:'Quicksand', system-ui, sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,196,148,.55), transparent 45%),
+      linear-gradient(180deg, var(--bg1), var(--bg2) 70%);
+    min-height:100vh;
+  }
+  h1,h2,h3{ font-family:'Baloo 2', sans-serif; margin:0; color:var(--ink); }
+  p{margin:0;}
+  img,svg{display:block;}
+  a{color:inherit;}
+  .wrap{ max-width:1160px; margin:0 auto; padding:0 24px; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  :focus-visible{ outline:3px solid var(--sky-dark); outline-offset:2px; border-radius:8px; }
+
+  /* ---------- NAV ---------- */
+  .nav{ position:sticky; top:0; z-index:40; backdrop-filter:blur(10px); background:rgba(255,246,236,0.72); border-bottom:1px solid var(--line); }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1160px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand svg{ width:36px; height:36px; }
+  .brand-word{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.35rem; background:linear-gradient(100deg,var(--coral),var(--peach) 55%,var(--marigold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .nav-cta{ border:none; border-radius:999px; padding:10px 20px; font-weight:700; font-size:.9rem; color:#fff; background:linear-gradient(100deg,var(--coral),var(--peach-dark)); box-shadow:0 8px 18px -8px rgba(226,78,116,.55); transition:transform .15s ease; }
+  .nav-cta:hover{ transform:translateY(-2px); }
+
+  /* ---------- HERO ---------- */
+  .hero{ position:relative; overflow:hidden; padding:64px 0 40px; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:48px; align-items:center; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line); padding:6px 14px; border-radius:999px; font-weight:700; font-size:.78rem; letter-spacing:.02em; color:var(--coral-dark); box-shadow:0 2px 0 var(--line); white-space:nowrap; }
+  .eyebrow .eyebrow-icon{ font-size:1rem; line-height:1; flex-shrink:0; }
+  .eyebrow img.eyebrow-icon{ width:14px; height:14px; display:block; }
+  .eyebrow .eyebrow-text{ display:inline-block; color:var(--coral-dark); }
+  .hero h1{ font-size:clamp(2.2rem, 4.4vw, 3.4rem); line-height:1.06; margin:18px 0 18px; font-weight:800; }
+  .hero h1 .hl{ background:linear-gradient(100deg,var(--coral),var(--peach) 55%,var(--marigold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p.lead{ font-size:1.12rem; color:var(--ink-dim); font-weight:500; max-width:46ch; line-height:1.55; }
+  .hero-ctas{ display:flex; flex-wrap:wrap; gap:14px; margin-top:28px; align-items:center; }
+
+  .btn-primary{ border:none; border-radius:999px; padding:15px 26px; font-weight:700; font-size:1rem; color:#fff; background:linear-gradient(100deg,var(--coral),var(--peach-dark)); box-shadow:0 12px 24px -10px rgba(226,78,116,.6); transition:transform .15s ease, box-shadow .15s ease; }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 16px 28px -10px rgba(226,78,116,.65); }
+  .btn-ghost{ border:2px solid var(--line); background:transparent; border-radius:999px; padding:13px 24px; font-weight:700; font-size:1rem; color:var(--ink); transition: all .15s ease; }
+  .btn-ghost:hover{ border-color:var(--coral); color:var(--coral-dark); }
+
+  .waitlist{ margin-top:26px; }
+  .waitlist-row{ display:flex; gap:10px; max-width:420px; }
+  .email-field{ position:relative; flex:1; display:flex; align-items:center; }
+  .email-field .field-icon{
+    position:absolute; left:16px; width:16px; height:16px; opacity:.85; pointer-events:none;
+  }
+  .waitlist-row input[type=email]{
+    flex:1; width:100%; border-radius:999px; border:2px solid transparent;
+    padding:13px 18px 13px 40px; font-family:inherit; font-size:.95rem;
+    background:var(--paper-soft); color:var(--ink); font-weight:600;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 1px 0 var(--line-soft);
+    transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .waitlist-row input[type=email]::placeholder{ color:var(--ink-faint); font-weight:600; }
+  .waitlist-row input[type=email]:hover{ background:#FFEBDA; }
+  .waitlist-row input[type=email]:focus{
+    background:var(--paper); border-color:var(--coral);
+    box-shadow:0 0 0 4px rgba(255,111,145,.16);
+  }
+  .final-cta .field-icon{ opacity:.9; }
+  .final-cta input[type=email]{ background:rgba(255,255,255,.85); }
+  .final-cta input[type=email]:focus{ background:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.35); }
+  .waitlist-note{ font-size:.8rem; color:var(--ink-faint); margin-top:8px; font-weight:600; }
+  .waitlist-msg{ font-weight:700; padding:13px 4px; font-size:.95rem; }
+  .waitlist-msg.err{ color:var(--coral-dark); }
+  .waitlist-msg.ok{ color:var(--mint-dark); }
+
+  /* Hero visual: blob + orbit chips */
+  .hero-visual{ position:relative; height:540px; display:flex; align-items:center; justify-content:center; }
+  .blob{ position:absolute; width:380px; height:380px; filter:drop-shadow(0 24px 40px rgba(226,78,116,.25)); }
+  .blob path{ transform-origin:center; }
+  @keyframes morph{
+    0%,100%{ d: path("M54,13 C65,12.5 76,18 81.5,29 C86.5,39 84,49 77.5,57 C73,62.5 70,66.5 68,74 C66,81 60,86 52,84.5 C45.5,83.3 43,77.5 36,75 C26,71.5 15.5,64.5 14,52.5 C12.5,41 20,31.5 28,25 C36,18.5 44.5,13.4 54,13 Z"); }
+    50%{ d: path("M52,10 C64,10 78,15 84,27 C89,38 82,48 76,56 C71,63 66,68 65,76 C64,83 57,88 49,85 C43,82.7 41,76 33,73 C23,69 14,61 13,50 C12,39 21,29 30,23 C39,17 45,10 52,10 Z"); }
+  }
+  .blob path{ animation:morph 9s ease-in-out infinite; }
+
+  /* Real-device screenshot frame, reused in hero + gallery */
+  .device-frame{ position:relative; width:230px; aspect-ratio:1080/2400; background:#232323; border-radius:38px; padding:8px; box-shadow:0 30px 50px -20px rgba(91,64,51,.4); z-index:2; }
+  .device-frame::before{ content:""; position:absolute; top:22px; left:50%; transform:translateX(-50%); width:8px; height:8px; border-radius:50%; background:#3a3a3a; z-index:3; }
+  .device-frame .screen{ width:100%; height:100%; border-radius:30px; overflow:hidden; background:var(--bg1); }
+  .device-frame .screen img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; transition:opacity .15s ease; }
+
+  .chip-float{ position:absolute; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:1.3rem; box-shadow:0 10px 22px -8px rgba(91,64,51,.35); }
+  @media (prefers-reduced-motion: no-preference){
+    .chip-float{ animation:float 6s ease-in-out infinite; }
+  }
+  @keyframes float{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+  @media (prefers-reduced-motion: reduce){
+    .blob path{ animation:none; }
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{ padding:88px 0; }
+  .section-head{ text-align:center; max-width:640px; margin:0 auto 44px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{ font-size:clamp(1.7rem,3vw,2.3rem); font-weight:800; margin-bottom:12px; }
+  .section-head p{ color:var(--ink-dim); font-weight:500; font-size:1.02rem; line-height:1.6; }
+
+  /* ---------- SCREEN GALLERY ---------- */
+  .sim{ background:var(--paper-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .gallery{ display:grid; grid-template-columns:340px 1fr; gap:52px; align-items:center; max-width:920px; margin:0 auto; }
+  .gallery .device-frame{ width:100%; max-width:320px; margin:0 auto; }
+  .gallery-tabs{ display:flex; flex-direction:column; gap:10px; }
+  .gallery-tab{ display:flex; align-items:center; gap:14px; text-align:left; border:1px solid var(--line); background:var(--paper); border-radius:var(--r-md); padding:16px 18px; transition:all .15s ease; }
+  .gallery-tab .num{ width:34px; height:34px; border-radius:50%; background:var(--bg2); color:var(--ink-dim); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex-shrink:0; }
+  .gallery-tab .txt h3{ font-size:.98rem; font-weight:700; margin-bottom:2px; }
+  .gallery-tab .txt p{ font-size:.82rem; color:var(--ink-dim); font-weight:500; line-height:1.4; }
+  .gallery-tab[aria-selected="true"]{ border-color:var(--coral); background:var(--paper); box-shadow:0 6px 16px -8px rgba(226,78,116,.35); }
+  .gallery-tab[aria-selected="true"] .num{ background:linear-gradient(100deg,var(--coral),var(--peach-dark)); color:#fff; }
+  .gallery-tab:hover{ transform:translateX(2px); }
+  @media (max-width:820px){
+    .gallery{ grid-template-columns:1fr; gap:32px; }
+    .gallery-tabs{ flex-direction:row; overflow-x:auto; padding-bottom:6px; }
+    .gallery-tab{ flex-direction:column; text-align:center; min-width:150px; }
+  }
+
+  /* ---------- FEATURES ---------- */
+  .features-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .feature-card{ background:var(--paper); border-radius:var(--r-lg); padding:28px 24px; box-shadow:0 2px 0 var(--line); border:1px solid var(--line-soft); }
+  .feature-card .icon{ width:48px; height:48px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:16px; }
+  .feature-card h3{ font-size:1.08rem; font-weight:700; margin-bottom:8px; }
+  .feature-card p{ color:var(--ink-dim); font-size:.92rem; line-height:1.55; font-weight:500; }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{ text-align:center; background:linear-gradient(120deg,var(--coral),var(--peach) 60%,var(--marigold)); border-radius:var(--r-xl); padding:64px 32px; margin:0 24px; color:#fff; position:relative; overflow:hidden; }
+  .final-cta h2{ color:#fff; font-size:clamp(1.7rem,3.4vw,2.4rem); margin-bottom:14px; }
+  .final-cta p{ color:rgba(255,255,255,.92); font-weight:600; max-width:44ch; margin:0 auto 28px; }
+  .final-cta .waitlist-row{ margin:0 auto; }
+  .final-cta input[type=email]{ border:2px solid rgba(255,255,255,.6); }
+  .final-cta input[type=email]:focus{ border-color:#fff; }
+  .final-cta .btn-primary{ background:#fff; color:var(--coral-dark); box-shadow:0 12px 24px -10px rgba(0,0,0,.3); }
+  .final-cta .waitlist-note{ color:rgba(255,255,255,.85); }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding:56px 0 32px; }
+  .footer-inner{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px; border-top:1px solid var(--line); padding-top:28px; }
+  .footer-links{ display:flex; gap:22px; flex-wrap:wrap; font-weight:700; font-size:.85rem; color:var(--ink-dim); }
+  .footer-links a{ text-decoration:none; }
+  .footer-links a:hover{ color:var(--coral-dark); }
+  .footer-copy{ font-size:.8rem; color:var(--ink-faint); font-weight:600; }
+
+  @media (max-width:900px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-visual{ height:480px; order:-1; }
+    .features-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:620px){
+    .features-grid{ grid-template-columns:1fr; }
+    .waitlist-row{ flex-direction:column; }
+    .final-cta{ margin:0 12px; padding:48px 20px; }
+    .hero-ctas{ flex-direction:column; align-items:stretch; }
+    .hero-ctas .btn-primary, .hero-ctas .btn-ghost{ text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Moody home">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="navblob" x1="10%" y1="5%" x2="95%" y2="100%">
+            <stop offset="0%" stop-color="#FF6F91"/><stop offset="55%" stop-color="#FFA65C"/><stop offset="100%" stop-color="#FFC24B"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#navblob)" d="M54,13 C65,12.5 76,18 81.5,29 C86.5,39 84,49 77.5,57 C73,62.5 70,66.5 68,74 C66,81 60,86 52,84.5 C45.5,83.3 43,77.5 36,75 C26,71.5 15.5,64.5 14,52.5 C12.5,41 20,31.5 28,25 C36,18.5 44.5,13.4 54,13 Z"/>
+      </svg>
+      <span class="brand-word">Moody</span>
+    </a>
+    <button class="nav-cta" onclick="document.getElementById('final-cta-form').querySelector('input').focus()">Join the waitlist</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><img class="eyebrow-icon" src="assets/moody-mark-coral.png" alt="" aria-hidden="true"><span class="eyebrow-text">Mood-sharing, for friends</span></span>
+      <h1>Say how you feel.<br><span class="hl">Skip the small talk.</span></h1>
+      <p class="lead">Moody turns your mood into a quick, honest signal instead of a paragraph you have to write and they have to read. Pick a mood, say what you need, choose who sees it.</p>
+      <div class="hero-ctas">
+        <form class="waitlist-row" id="hero-form" novalidate>
+          <label class="visually-hidden" for="hero-email" style="position:absolute;left:-9999px;">Email address</label>
+          <span class="email-field">
+            <img class="field-icon" src="assets/moody-mark-coral.png" alt="" aria-hidden="true">
+            <input id="hero-email" type="email" placeholder="you@email.com" autocomplete="email" required>
+          </span>
+          <button class="btn-primary" type="submit">Join waitlist</button>
+        </form>
+      </div>
+      <div id="hero-msg" role="status" aria-live="polite"></div>
+      <p class="waitlist-note">Free to join. We'll email you when Moody is ready to download.</p>
+      <div class="hero-ctas" style="margin-top:4px;">
+        <a class="btn-ghost" href="#simulate">See how it works ↓</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <svg class="blob" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heroblob" x1="10%" y1="5%" x2="95%" y2="100%">
+            <stop offset="0%" stop-color="#FF6F91"/><stop offset="55%" stop-color="#FFA65C"/><stop offset="100%" stop-color="#FFC24B"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#heroblob)" d="M54,13 C65,12.5 76,18 81.5,29 C86.5,39 84,49 77.5,57 C73,62.5 70,66.5 68,74 C66,81 60,86 52,84.5 C45.5,83.3 43,77.5 36,75 C26,71.5 15.5,64.5 14,52.5 C12.5,41 20,31.5 28,25 C36,18.5 44.5,13.4 54,13 Z"/>
+      </svg>
+      <div class="device-frame">
+        <div class="screen"><img src="assets/moody-splash.png" alt="Moody app splash screen showing the Moody logo and wordmark"></div>
+      </div>
+      <span class="chip-float" style="top:6%; left:2%; width:52px; height:52px; background:#FFE0B8;">😴</span>
+      <span class="chip-float" style="bottom:10%; right:0; width:56px; height:56px; background:#FFD1DE; animation-delay:1.5s;">🎉</span>
+      <span class="chip-float" style="top:44%; right:8%; width:44px; height:44px; background:#D8F0E5; animation-delay:3s;">🧘</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SIMULATION ============ -->
+<section class="section sim" id="simulate">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="eyebrow-icon" aria-hidden="true">👆</span><span class="eyebrow-text">Take a look inside</span></span>
+      <h2>Real screens from the real app</h2>
+      <p>No mockups — this is Moody, mid-build. Tap through a few screens to see the flow, from picking a mood to catching a friend's check-in.</p>
+    </div>
+
+    <div class="gallery">
+      <div class="device-frame">
+        <div class="screen"><img id="gallery-img" src="assets/moody-create.png" alt="The New Moodify screen, showing a mood selection grid with Chill selected"></div>
+      </div>
+      <div class="gallery-tabs" role="tablist" aria-label="App screens">
+        <button class="gallery-tab" role="tab" aria-selected="true" data-img="assets/moody-create.png" data-alt="The New Moodify screen, showing a mood selection grid with Chill selected">
+          <span class="num">1</span>
+          <span class="txt"><h3>Pick a mood</h3><p>Filter by Calm, Energized, Social, Heavy, or Anxious, then tap the one that fits.</p></span>
+        </button>
+        <button class="gallery-tab" role="tab" aria-selected="false" data-img="assets/moody-profile.png" data-alt="A profile screen showing mood streak, friend count, moodify count, and recent moods">
+          <span class="num">2</span>
+          <span class="txt"><h3>Build a streak</h3><p>Your profile tracks your mood streak, your recent check-ins, and your settings in one place.</p></span>
+        </button>
+        <button class="gallery-tab" role="tab" aria-selected="false" data-img="assets/moody-streak.png" data-alt="A streak detail sheet showing a 4-day streak and a week of flame icons">
+          <span class="num">3</span>
+          <span class="txt"><h3>See your progress</h3><p>Tap your streak to see the week laid out and how close you are to the next flame level.</p></span>
+        </button>
+        <button class="gallery-tab" role="tab" aria-selected="false" data-img="assets/moody-friends.png" data-alt="A friends screen showing a friend's mood post">
+          <span class="num">4</span>
+          <span class="txt"><h3>Catch up with friends</h3><p>See what your friends are feeling today, right at the top of your Friends tab.</p></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="eyebrow-icon" aria-hidden="true">✨</span><span class="eyebrow-text">What's inside</span></span>
+      <h2>Everything you need to check in, nothing you have to explain</h2>
+      <p>A handful of features, built to make sharing a mood take five seconds instead of five minutes.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon" style="background:#FFE1E9;">🎭</div>
+        <h3>Dozens of moods, not five</h3>
+        <p>From Peaceful to Unstoppable, each mood has its own color, tone, and message — so "fine" doesn't have to cover everything.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background:#FFEAD3;">🗣️</div>
+        <h3>Say what you need</h3>
+        <p>Tag your mood with an intent like "available to talk," "need space," or "please check in," so friends know how to show up.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background:#E3F3EA;">🔒</div>
+        <h3>Choose who sees it</h3>
+        <p>Share with everyone or pick specific friends for the moods that aren't for the whole group.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background:#F0E6FA;">💫</div>
+        <h3>Deluxe moods</h3>
+        <p>Unlock extra moods — like Zen, Dreamy, and Charming — for the days a basic mood doesn't quite fit.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background:#FFF3D1;">👥</div>
+        <h3>Built for friends, not a feed</h3>
+        <p>Moody is about the people who actually check on you — not an audience of strangers scrolling by.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background:#DFF1FF;">🔔</div>
+        <h3>Gentle notifications</h3>
+        <p>A quiet nudge when a friend's mood needs a reply — never a flood of alerts for every check-in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="final-cta">
+      <h2>Be the first to feel it out.</h2>
+      <p>Moody is in development right now. Join the waitlist and we'll let you know the moment it's ready to download.</p>
+      <form class="waitlist-row" id="final-cta-form" novalidate>
+        <label style="position:absolute;left:-9999px;" for="final-email">Email address</label>
+        <span class="email-field">
+          <img class="field-icon" src="assets/moody-mark-coral.png" alt="" aria-hidden="true">
+          <input id="final-email" type="email" placeholder="you@email.com" autocomplete="email" required>
+        </span>
+        <button class="btn-primary" type="submit">Join waitlist</button>
+      </form>
+      <div id="final-msg" role="status" aria-live="polite"></div>
+      <p class="waitlist-note">No spam — just one email when we launch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap footer-inner">
+    <a class="brand" href="#top">
+      <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="footblob" x1="10%" y1="5%" x2="95%" y2="100%">
+            <stop offset="0%" stop-color="#FF6F91"/><stop offset="55%" stop-color="#FFA65C"/><stop offset="100%" stop-color="#FFC24B"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#footblob)" d="M54,13 C65,12.5 76,18 81.5,29 C86.5,39 84,49 77.5,57 C73,62.5 70,66.5 68,74 C66,81 60,86 52,84.5 C45.5,83.3 43,77.5 36,75 C26,71.5 15.5,64.5 14,52.5 C12.5,41 20,31.5 28,25 C36,18.5 44.5,13.4 54,13 Z"/>
+      </svg>
+      <span class="brand-word" style="font-size:1.05rem;">Moody</span>
+    </a>
+    <nav class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#simulate">How it works</a>
+      <a href="tel:+639153850903">+63 915 385 0903</a>
+    </nav>
+    <span class="footer-copy">© 2026 Moody. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Screen gallery (real app screenshots) ----
+  var galleryImg = document.getElementById('gallery-img');
+  var tabs = document.querySelectorAll('.gallery-tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.setAttribute('aria-selected', 'false'); });
+      tab.setAttribute('aria-selected', 'true');
+      galleryImg.style.opacity = 0;
+      window.setTimeout(function(){
+        galleryImg.src = tab.dataset.img;
+        galleryImg.alt = tab.dataset.alt;
+        galleryImg.style.opacity = 1;
+      }, 150);
+    });
+  });
+
+  // ---- Waitlist forms (mock, client-side only) ----
+  function wireWaitlist(formId, msgId){
+    var form = document.getElementById(formId);
+    var msg = document.getElementById(msgId);
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var input = form.querySelector('input[type=email]');
+      var email = input.value.trim();
+      var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if(!ok){
+        msg.innerHTML = '<p class="waitlist-msg err">Enter a valid email to join the waitlist.</p>';
+        input.focus();
+        return;
+      }
+      var btn = form.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Joining…';
+      window.setTimeout(function(){
+        msg.innerHTML = '<p class="waitlist-msg ok">You\'re on the list 🎉 — this is a demo, no email was actually sent.</p>';
+        form.reset();
+        btn.disabled = false; btn.textContent = 'Join waitlist';
+      }, 700);
+    });
+  }
+  wireWaitlist('hero-form', 'hero-msg');
+  wireWaitlist('final-cta-form', 'final-msg');
+})();
+</script>
+</body>
+</html>

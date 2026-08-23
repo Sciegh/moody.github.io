@@ -385,8 +385,11 @@
       }, 150);
     });
   });
+  // ---- Waitlist forms (submits to Formspark) ----
+  // Replace with your real Formspark form ID from https://dash.formspark.io
+  var FORMSPARK_FORM_ID = 'pmHHoFa3b';
+  var FORMSPARK_URL = 'https://submit-form.com/' + FORMSPARK_FORM_ID;
 
-  // ---- Waitlist forms (mock, client-side only) ----
   function wireWaitlist(formId, msgId){
     var form = document.getElementById(formId);
     var msg = document.getElementById(msgId);
@@ -403,11 +406,26 @@
       }
       var btn = form.querySelector('button');
       btn.disabled = true; btn.textContent = 'Joining…';
-      window.setTimeout(function(){
-        msg.innerHTML = '<p class="waitlist-msg ok">You\'re on the list 🎉 — this is a demo, no email was actually sent.</p>';
-        form.reset();
-        btn.disabled = false; btn.textContent = 'Join waitlist';
-      }, 700);
+
+      fetch(FORMSPARK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email: email })
+      })
+        .then(function(response){
+          if(!response.ok){ throw new Error('Request failed'); }
+          msg.innerHTML = '<p class="waitlist-msg ok">You\'re on the list 🎉 — we\'ll email you when Moody is ready.</p>';
+          form.reset();
+        })
+        .catch(function(){
+          msg.innerHTML = '<p class="waitlist-msg err">Something went wrong — mind trying again?</p>';
+        })
+        .finally(function(){
+          btn.disabled = false; btn.textContent = 'Join waitlist';
+        });
     });
   }
   wireWaitlist('hero-form', 'hero-msg');

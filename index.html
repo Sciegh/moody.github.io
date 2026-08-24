@@ -90,6 +90,18 @@
   .final-cta input[type=email]{ background:rgba(255,255,255,.85); }
   .final-cta input[type=email]:focus{ background:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.35); }
   .waitlist-note{ font-size:.8rem; color:var(--ink-faint); margin-top:8px; font-weight:600; }
+
+  /* ---------- PLATFORM BADGE ---------- */
+  .platform-badge{ display:inline-flex; align-items:center; gap:10px; margin-top:16px; padding:9px 16px 9px 10px; border-radius:999px; background:var(--paper); border:1.5px solid var(--line); box-shadow:0 4px 12px -6px rgba(91,64,51,.25); }
+  .platform-badge .store-icons{ display:flex; align-items:center; gap:6px; }
+  .platform-badge .store-icon{ width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  .platform-badge .store-icon.apple{ background:#232323; color:#fff; }
+  .platform-badge .store-icon.android{ background:linear-gradient(135deg,#3FCE9A,#26AD7C); color:#fff; }
+  .platform-badge .store-text{ font-size:.85rem; font-weight:800; color:var(--ink); }
+  .platform-badge .store-text .hl{ background:linear-gradient(100deg,var(--coral),var(--peach-dark)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  .final-cta .platform-badge{ background:rgba(255,255,255,.94); border-color:transparent; }
+  .final-cta .platform-badge .store-text{ color:var(--ink); }
   .waitlist-msg{ font-weight:700; padding:13px 4px; font-size:.95rem; }
   .waitlist-msg.err{ color:var(--coral-dark); }
   .waitlist-msg.ok{ color:var(--mint-dark); }
@@ -222,6 +234,9 @@
       </div>
       <div id="hero-msg" role="status" aria-live="polite"></div>
       <p class="waitlist-note">Free to join. We'll email you when Moody is ready to download.</p>
+      <div class="platform-badge">
+        <span class="store-text">Coming soon to <span class="hl">App Store</span> &amp; <span class="hl">Google Play</span></span>
+      </div>
       <div class="hero-ctas" style="margin-top:4px;">
         <a class="btn-ghost" href="#simulate">See how it works ↓</a>
       </div>
@@ -339,6 +354,9 @@
       </form>
       <div id="final-msg" role="status" aria-live="polite"></div>
       <p class="waitlist-note">No spam — just one email when we launch.</p>
+      <div class="platform-badge" style="margin-left:auto; margin-right:auto;">
+        <span class="store-text">Coming soon to <span class="hl">App Store</span> &amp; <span class="hl">Google Play</span></span>
+      </div>
     </div>
   </div>
 </section>
